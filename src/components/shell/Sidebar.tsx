@@ -103,6 +103,16 @@ export function Sidebar({ user }: SidebarProps) {
             </Link>
           );
         })}
+
+        <div className="pt-4 mt-4 border-t border-white/10">
+          <Link
+            href="/"
+            className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-flectere-gold hover:bg-white/10 transition-colors"
+          >
+            <ShieldCheck className="w-4 h-4 text-flectere-gold" />
+            <span>Public School Portal</span>
+          </Link>
+        </div>
       </nav>
 
       {/* User Identity & Logout */}
