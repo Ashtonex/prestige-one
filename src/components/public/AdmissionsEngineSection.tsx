@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { MotionBackground3D } from "./MotionBackground3D";
 import {
   Calendar,
   Calculator,
@@ -142,8 +143,11 @@ export function AdmissionsEngineSection() {
   };
 
   return (
-    <section id="admissions" className="py-20 lg:py-28 bg-[#071126] text-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="admissions" className="py-20 lg:py-28 bg-[#071126] text-white relative overflow-hidden">
+      {/* Ambient 3D starfield */}
+      <MotionBackground3D showGlobe={false} intensity={0.6} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-flectere-gold/15 border border-flectere-gold/30 text-flectere-gold text-xs font-bold tracking-widest uppercase mb-4">

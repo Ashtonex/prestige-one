@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { MotionBackground3D } from "./MotionBackground3D";
 import { Quote, Star, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 
 export function ParentTestimonialsSection() {
@@ -65,6 +66,9 @@ export function ParentTestimonialsSection() {
 
   return (
     <section className="py-20 lg:py-28 bg-[#0b1730] text-white relative overflow-hidden">
+      {/* Ambient 3D starfield */}
+      <MotionBackground3D showGlobe={false} intensity={0.5} />
+
       {/* Decorative background glow */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-flectere-gold/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 

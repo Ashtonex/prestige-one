@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { MotionBackground3D } from "./MotionBackground3D";
 import {
   Calendar,
   Play,
@@ -56,6 +57,10 @@ export function HeroSection({ onOpenTour }: HeroSectionProps) {
 
         {/* Left Dark Navy Vignette for crisp typography contrast */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#060E1E] via-[#060E1E]/80 sm:via-[#060E1E]/60 to-transparent" />
+        {/* Navy wash so the 3D globe reads crisply over the photography */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_46%,rgba(6,14,30,0.55),rgba(6,14,30,0.15)_60%,transparent_80%)]" />
+        {/* 3D Motion Layer: particle globe, orbital rings & connection arcs */}
+        <MotionBackground3D className="mix-blend-screen" />
         {/* Bottom Fade into ribbon */}
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#060E1E] via-[#060E1E]/75 to-transparent" />
         {/* Top Fade for header */}
