@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { PublicHeader } from "./PublicHeader";
+import { ScrollMotion } from "./ScrollMotion";
 import { HeroSection } from "./HeroSection";
 import { AcademicExcellenceSection } from "./AcademicExcellenceSection";
 import { PrestigeExperienceSection } from "./PrestigeExperienceSection";
@@ -27,6 +28,7 @@ export function PublicHomePageClient({ user }: PublicHomePageClientProps) {
           onOpenTour={() => setTourModalOpen(true)}
           user={user}
         />
+        <ScrollMotion />
 
         {/* Hero Section */}
         <HeroSection onOpenTour={() => setTourModalOpen(true)} />

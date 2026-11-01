@@ -149,8 +149,8 @@ export function MotionBackground3D({
 
       // On phones the globe tucks into the top-right corner, clear of the headline
       const cx = isMobile ? width * 0.92 : width * anchorX;
-      const cy = isMobile ? height * 0.14 : height * 0.46;
-      const scale = isMobile ? width * 0.3 : Math.min(width, height) * 0.27;
+      const cy = (isMobile ? height * 0.14 : height * 0.46) - scrollFactor * height * 0.18;
+      const scale = (isMobile ? width * 0.3 : Math.min(width, height) * 0.27) * (1 + scrollFactor * 0.9);
       const globeAlpha = isMobile ? 0.55 : 1;
 
       const t = now * 0.001;

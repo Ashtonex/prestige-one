@@ -32,7 +32,7 @@ export function HeroSection({ onOpenTour }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative min-h-[92vh] lg:min-h-screen flex flex-col justify-between pt-32 pb-12 sm:pb-16 overflow-hidden bg-[#060E1E]">
+    <section data-sfx-hero className="relative min-h-[92vh] lg:min-h-screen flex flex-col justify-between pt-32 pb-12 sm:pb-16 overflow-hidden bg-[#060E1E]">
       {/* Background Images with High-Definition Cross-Fade */}
       <div className="absolute inset-0 z-0 select-none">
         {/* Layer 1: Scholars & Intellectual Collaboration (Default) */}
@@ -68,7 +68,7 @@ export function HeroSection({ onOpenTour }: HeroSectionProps) {
       </div>
 
       {/* Main Content Area */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center">
+      <div data-sfx-hero-layer="1" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center will-change-transform">
         <div className="max-w-2xl lg:max-w-3xl">
           {/* Tagline Badge */}
           <div className="flex items-center gap-3 mb-4">
@@ -127,7 +127,7 @@ export function HeroSection({ onOpenTour }: HeroSectionProps) {
       </div>
 
       {/* Floating Glassmorphic Ribbon Badge Bar across Bottom */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-12">
+      <div data-sfx-hero-layer="0.55" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-12 will-change-transform">
         <div className="bg-[#0b1730]/85 backdrop-blur-xl border border-white/15 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden">
           {/* Subtle gold line accent along the top of ribbon */}
           <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-flectere-gold to-transparent opacity-80" />

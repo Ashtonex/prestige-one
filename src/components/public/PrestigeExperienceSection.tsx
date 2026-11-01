@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { FloatingShapes } from "./FloatingShapes";
 import {
   Sparkles,
   Trophy,
@@ -69,7 +70,8 @@ export function PrestigeExperienceSection() {
   ];
 
   return (
-    <section className="py-20 lg:py-28 bg-flectere-light relative overflow-hidden">
+    <section className="py-20 lg:py-28 bg-flectere-light relative overflow-hidden isolate">
+      <FloatingShapes flip />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">

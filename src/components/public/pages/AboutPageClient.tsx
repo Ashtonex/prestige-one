@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LanguageProvider, useLanguage } from "@/lib/i18n/LanguageContext";
 import { PublicHeader } from "../PublicHeader";
+import { ScrollMotion } from "../ScrollMotion";
 import { PublicFooter } from "../PublicFooter";
 import { VirtualTourModal } from "../VirtualTourModal";
 import {
@@ -85,6 +86,7 @@ function AboutContent({ user }: { user?: any }) {
   return (
     <div className="min-h-screen bg-[#060E1E] text-white flex flex-col selection:bg-flectere-gold/30">
       <PublicHeader onOpenTour={() => setTourOpen(true)} user={user} />
+      <ScrollMotion />
 
       {/* Hero Banner */}
       <section className="relative pt-36 pb-20 overflow-hidden bg-gradient-to-b from-[#081226] via-[#0A1734] to-[#060E1E]">
