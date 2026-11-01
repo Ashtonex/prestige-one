@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { studentScopeWhere } from "@/lib/access";
 import { studentUpdateSchema } from "@/lib/validations/student";
 
 export async function GET(
@@ -14,8 +15,8 @@ export async function GET(
 
   const { id } = await params;
 
-  const student = await prisma.student.findUnique({
-    where: { id },
+  const student = await prisma.student.findFirst({
+    where: { AND: [{ id }, studentScopeWhere(user)] },
     include: {
       enrollments: {
         include: { class: true, academicYear: true },
@@ -36,16 +37,9 @@ export async function GET(
     },
   });
 
-  if (!student || student.institutionId !== user.institutionId) {
+  // Out-of-scope records return 404 so their existence isn't revealed
+  if (!student) {
     return NextResponse.json({ error: "Student not found" }, { status: 404 });
-  }
-
-  // Guardian relationship boundary check
-  if (user.role === "GUARDIAN") {
-    const isLinked = student.guardians.some((g) => g.guardian.userId === user.id);
-    if (!isLinked) {
-      return NextResponse.json({ error: "Access denied to unrelated learner" }, { status: 403 });
-    }
   }
 
   return NextResponse.json({ student });

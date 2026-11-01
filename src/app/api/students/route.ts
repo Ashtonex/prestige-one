@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { studentScopeWhere } from "@/lib/access";
 import { studentCreateSchema } from "@/lib/validations/student";
+import type { Prisma } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
@@ -13,15 +15,14 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get("search")?.toLowerCase().trim();
   const gradeLevel = searchParams.get("gradeLevel");
 
-  const where: any = {
-    institutionId: user.institutionId,
-  };
+  const where: Prisma.StudentWhereInput = studentScopeWhere(user);
 
   if (gradeLevel && gradeLevel !== "ALL") {
     where.gradeLevel = gradeLevel;
   }
 
   if (search) {
+    // Safe alongside the scope: studentScopeWhere never sets OR
     where.OR = [
       { firstName: { contains: search, mode: "insensitive" } },
       { lastName: { contains: search, mode: "insensitive" } },
@@ -78,8 +79,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Class check
-    const classRecord = await prisma.class.findUnique({
-      where: { id: data.classId },
+    const classRecord = await prisma.class.findFirst({
+      where: { id: data.classId, institutionId: user.institutionId },
     });
 
     if (!classRecord) {
