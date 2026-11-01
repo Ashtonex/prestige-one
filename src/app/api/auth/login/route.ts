@@ -4,14 +4,35 @@ import { createSession } from "@/lib/auth";
 import { loginSchema } from "@/lib/validations/auth";
 import bcrypt from "bcryptjs";
 
+// Demo deployments (e.g. the public Vercel site) ship without a database; the
+// portal is presented live from a local install instead.
+const portalAvailable = () => Boolean(process.env.DATABASE_URL);
+
+export function GET() {
+  return NextResponse.json({ portalAvailable: portalAvailable() });
+}
+
 export async function POST(request: NextRequest) {
+  if (!portalAvailable()) {
+    return NextResponse.json(
+      {
+        error: "The operations portal is not available in this preview",
+        demoOffline: true,
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
     const result = loginSchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "Invalid email or password format", details: result.error.flatten() },
+        {
+          error: "Invalid email or password format",
+          details: result.error.flatten(),
+        },
         { status: 400 }
       );
     }
@@ -24,7 +45,9 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid credentials. Please verify your email and password." },
+        {
+          error: "Invalid credentials. Please verify your email and password.",
+        },
         { status: 401 }
       );
     }
@@ -32,7 +55,9 @@ export async function POST(request: NextRequest) {
     const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
     if (!passwordsMatch) {
       return NextResponse.json(
-        { error: "Invalid credentials. Please verify your email and password." },
+        {
+          error: "Invalid credentials. Please verify your email and password.",
+        },
         { status: 401 }
       );
     }
