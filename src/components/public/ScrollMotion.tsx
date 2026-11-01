@@ -36,6 +36,7 @@ export function ScrollMotion() {
 
     const finish = (el: HTMLElement) => {
       el.removeAttribute("data-sfx");
+      el.removeAttribute("data-sfx-owner");
       el.style.removeProperty("--sfx-delay");
       el.dataset.sfxDone = "1";
     };
@@ -57,14 +58,27 @@ export function ScrollMotion() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
     );
 
+    const observed = new WeakSet<Element>();
+    const owner = Math.random().toString(36).slice(2);
+
     const tag = (el: Element, fx: string, delay = 0) => {
       const h = el as HTMLElement;
-      if (h.dataset.sfx || h.dataset.sfxDone) return;
+      if (h.dataset.sfxDone || observed.has(h)) return;
+      // Already tagged by an instance from the previous page (client-side
+      // navigation): adopt it, otherwise it would stay hidden forever.
+      if (h.dataset.sfx) {
+        h.dataset.sfxOwner = owner;
+        observed.add(h);
+        io.observe(h);
+        return;
+      }
       if (h.closest("[data-sfx-hero], header, footer, [role=dialog], .fixed")) return;
       // Never hide something already scrolled past
       if (h.getBoundingClientRect().bottom < 0) return;
       h.dataset.sfx = hasTransformClass(h) ? "fade" : fx;
       if (delay) h.style.setProperty("--sfx-delay", `${delay}ms`);
+      h.dataset.sfxOwner = owner;
+      observed.add(h);
       io.observe(h);
     };
 
@@ -154,11 +168,14 @@ export function ScrollMotion() {
 
     const markTilt = () => tiltCards.forEach((c) => (c.dataset.sfxTilt = "1"));
 
-    scan();
-    markTilt();
-    onScroll();
-
-    let rescanTimer = 0;
+    // Defer the first scan a moment: on client-side navigation the router
+    // resets the scroll position after this effect runs, and scanning at the
+    // old position would treat the new page as already scrolled past.
+    let rescanTimer = window.setTimeout(() => {
+      scan();
+      markTilt();
+      onScroll();
+    }, 120);
     const mo = new MutationObserver(() => {
       window.clearTimeout(rescanTimer);
       rescanTimer = window.setTimeout(() => {
@@ -175,6 +192,12 @@ export function ScrollMotion() {
     return () => {
       io.disconnect();
       mo.disconnect();
+      // Release anything this instance left waiting (and no newer instance has
+      // adopted) so nothing is left invisible
+      document.querySelectorAll<HTMLElement>(`[data-sfx-owner="${owner}"][data-sfx]`).forEach((el) => {
+        el.classList.remove("sfx-in");
+        finish(el);
+      });
       window.clearTimeout(rescanTimer);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
