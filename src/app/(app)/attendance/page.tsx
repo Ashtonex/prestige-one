@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { attendanceClassScopeWhere } from "@/lib/access";
 import { AttendanceRegisterGrid } from "@/components/attendance/AttendanceRegisterGrid";
 import { CalendarCheck, ChevronRight } from "lucide-react";
 import type { AttendanceStatus } from "@prisma/client";
@@ -17,13 +18,14 @@ export default async function AttendancePage({
   const { classId } = await searchParams;
 
   const classes = await prisma.class.findMany({
-    where: { institutionId: user.institutionId },
+    where: attendanceClassScopeWhere(user),
     select: { id: true, name: true, gradeLevel: true },
     orderBy: { name: "asc" },
   });
 
-  const selectedClassId = classId || classes[0]?.id;
-  const currentClass = classes.find((c) => c.id === selectedClassId) || classes[0];
+  // Only honour a classId from the URL if it is one of the user's permitted classes
+  const currentClass = classes.find((c) => c.id === classId) || classes[0];
+  const selectedClassId = currentClass?.id;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);

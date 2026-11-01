@@ -34,8 +34,8 @@ export async function createStudentAction(input: StudentCreateInput) {
     }
 
     // 3. Find the selected class and academic year
-    const classRecord = await prisma.class.findUnique({
-      where: { id: data.classId },
+    const classRecord = await prisma.class.findFirst({
+      where: { id: data.classId, institutionId: user.institutionId },
       include: { academicYear: true },
     });
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { studentScopeWhere } from "@/lib/access";
 import { formatDate, formatMZN } from "@/lib/utils";
 import {
   User,
@@ -29,8 +30,8 @@ export default async function StudentDetailPage({
   const user = await requireAuth();
   const { id } = await params;
 
-  const student = await prisma.student.findUnique({
-    where: { id },
+  const student = await prisma.student.findFirst({
+    where: { AND: [{ id }, studentScopeWhere(user)] },
     include: {
       enrollments: {
         include: {
@@ -54,16 +55,8 @@ export default async function StudentDetailPage({
     },
   });
 
-  if (!student || student.institutionId !== user.institutionId) {
+  if (!student) {
     notFound();
-  }
-
-  // Guardian relationship boundary check
-  if (user.role === "GUARDIAN") {
-    const isLinked = student.guardians.some((g) => g.guardian.userId === user.id);
-    if (!isLinked) {
-      notFound();
-    }
   }
 
   const activeEnrollment = student.enrollments.find((e) => e.status === "ACTIVE") || student.enrollments[0];
